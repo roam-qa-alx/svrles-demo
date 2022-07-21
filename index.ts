@@ -1,4 +1,7 @@
-import { api, data, schedule, params } from "@serverless/cloud";
+import { api, data, schedule, params } from "@serverless/cloud"
+import axios from "axios"
+import * as dotenv from "dotenv";
+dotenv.config()
 
 // Create GET route and return users
 api.get("/users", async (req, res) => {
@@ -17,13 +20,23 @@ api.get("/*", (req, res) => {
 
 // Create POST route to create user
 api.post("/users", async (req, res) => {
-  let userNameRandomIdentifier = +new Date();
-  const userName = "user-" + userNameRandomIdentifier;
-  let newUser = await data.set(userName, 1, true);
+  let newUser: Object;
+  newUser = await data.set(generateUserNameWithTimestamp(), 1, true);
   res.send({
     users: newUser,
   });
 });
+
+function generateUserNameWithTimestamp() {
+  let userNameRandomIdentifier: number;
+  let combinedUserName: string;
+
+  userNameRandomIdentifier = +new Date();
+  combinedUserName = "user-" + userNameRandomIdentifier;
+  console.log(`username generated is: ${combinedUserName}`)
+  return combinedUserName;
+}
+
 
 data.on("created", async (event) => {
   // an item has been created
@@ -31,9 +44,19 @@ data.on("created", async (event) => {
   console.log(event.item);
 });
 
-schedule.cron("0 0 * * WED", () => {
-  // This code block will run at midnight on Weds!
-  console.log(
-    "This was run at midnight on Wednesday. If it wasn't ... oh boy."
-  );
-});
+schedule.every("1 minute", () => {
+  console.log("I run every 1 minute");
+  let config = {
+    method: 'post',
+    url: process.env.SERVERLESS_URL,
+    headers: { }
+  };
+  axios(config)
+  .then((response) => {
+  console.log(JSON.stringify(response.data));
+  })
+  .catch((error) => {
+  console.log(error);
+  });
+  console.log("test!");
+})

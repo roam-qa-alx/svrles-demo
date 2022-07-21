@@ -1,3 +1,5 @@
+# svrles-demo
+Learning and creating serverless functions using https://www.serverless.com
 # Serverless Cloud TypeScript API
 
 This is a scaffolding project for building a TypeScript API on Serverless Cloud! Type `cloud` to enter the cloud shell and connect to your personal development instance. Just play with the code and watch changes sync and deploy in less than a second.

@@ -9,11 +9,15 @@
     "test": "cloud test"
   },
   "devDependencies": {
-    "@serverless/cloud": "^2.0.0",
+    "@serverless/cloud": "^2.10.10",
     "@types/jest": "^26.0.24"
   },
   "serverless": {
     "app": "svrles-ts-demo",
     "org": "supertails123"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "dotenv": "^16.0.1"
   }
 }
