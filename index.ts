@@ -1,4 +1,7 @@
-import { api, data, schedule, params } from "@serverless/cloud";
+import { api, data, schedule, params } from "@serverless/cloud"
+import axios from "axios"
+import * as dotenv from "dotenv";
+dotenv.config()
 
 // Create GET route and return users
 api.get("/users", async (req, res) => {
@@ -17,7 +20,6 @@ api.get("/*", (req, res) => {
 
 // Create POST route to create user
 api.post("/users", async (req, res) => {
-  // let newUser = await data.set(generateUserNameWithTimestamp(), 1, true);
   let newUser: Object;
   newUser = await data.set(generateUserNameWithTimestamp(), 1, true);
   res.send({
@@ -42,6 +44,19 @@ data.on("created", async (event) => {
   console.log(event.item);
 });
 
-schedule.every("5 minutes", () => {
-  console.log("I run every 5 minutes");
+schedule.every("1 minute", () => {
+  console.log("I run every 1 minute");
+  let config = {
+    method: 'post',
+    url: process.env.SERVERLESS_URL,
+    headers: { }
+  };
+  axios(config)
+  .then((response) => {
+  console.log(JSON.stringify(response.data));
+  })
+  .catch((error) => {
+  console.log(error);
+  });
+  console.log("test!");
 })
